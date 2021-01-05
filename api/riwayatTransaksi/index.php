@@ -4,9 +4,19 @@ include '../../config/functions.php';
 
 $responses = array("code" => null, "message" => null, "totalData" => null, "data" => null);
 $idx = 0;
-$idFaktur = $_GET['idfaktur'];
-$idbrg = $_GET['idbrg'];
-$rssql = "SELECT fp.id_faktur, fpd.id_barang, fb.nama_barang,fb.harga AS harga_satuan, fb.image AS gambar, fpd.harga AS harga_detail_per_barang,fpd.qty,fs.nama_satuan,fs.satuan,fp.grandtotal,fp.nilaibayar,fp.nilaikembali,fp.tgl_penjualan FROM `flutter_penjualan` fp INNER JOIN `flutter_penjualan_detail` fpd ON fp.id_faktur = fpd.id_faktur INNER JOIN `flutter_barang` fb ON fpd.id_barang = fb.id_barang INNER JOIN `flutter_satuan` fs ON fs.id_satuan = fb.id_satuan";
+$idFaktur = $_POST['idfaktur'];
+$idbrg = $_POST['idbrg'];
+$userid = $_POST['userid'];
+$rssql = "SELECT fp.id_faktur, fpd.id_barang, fb.nama_barang,fb.harga AS harga_satuan, fb.image AS gambar, fpd.harga AS harga_detail_per_barang,fpd.qty,fs.nama_satuan,fs.satuan,fp.grandtotal,fp.nilaibayar,fp.nilaikembali,fp.tgl_penjualan FROM `flutter_penjualan` fp INNER JOIN `flutter_penjualan_detail` fpd ON fp.id_faktur = fpd.id_faktur INNER JOIN `flutter_barang` fb ON fpd.id_barang = fb.id_barang INNER JOIN `flutter_satuan` fs ON fs.id_satuan = fb.id_satuan WHERE fp.userid = '$userid'";
+
+if(empty($userid)){
+    header('Content-Type: application/json', true, 404);
+    $responses["code"] = 404;
+    $responses["message"] = "iduser is required";
+    
+    echo json_encode($responses);
+    return;
+}
 
 if (empty($idFaktur) && empty($idbrg)) {
 
@@ -51,7 +61,7 @@ if (empty($idFaktur) && empty($idbrg)) {
         return;
     }
 
-    $rssqldetail = $rssql . " WHERE fp.id_faktur = '$idFaktur' AND fpd.id_barang = '$idbrg'";
+    $rssqldetail = $rssql . " AND fp.id_faktur = '$idFaktur' AND fpd.id_barang = '$idbrg'";
     $sql = mysqli_query($con, $rssqldetail);
     while ($dbField = mysqli_fetch_assoc($sql)) {
 

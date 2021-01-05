@@ -24,6 +24,8 @@ if ($jumlahRec > 0) {
         $responseField['userid'] = (int)$row->userid;
         $responseField['username'] = $row->username;
         $responseField['password'] = $row->password;
+        $responseField['nama'] = $row->nama;
+        $responseField['email'] = $row->email;
         $responseField['level'] = (int)$row->level;
         
         $responses["data"][$idx] = $responseField;

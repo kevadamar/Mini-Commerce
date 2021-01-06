@@ -20,6 +20,8 @@ if(empty($userid)){
 
 if (empty($idFaktur) && empty($idbrg)) {
 
+    $rssql = $rssql . " ORDER BY tgl_penjualan DESC";
+
     $sql = mysqli_query($con, $rssql);
     while ($dbField = mysqli_fetch_assoc($sql)) {
 
